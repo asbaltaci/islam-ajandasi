@@ -41,11 +41,38 @@ function createPanel(parent,title,subtitle){let p=document.createElement('sectio
 function drawChecks(parent,items,prefix){let grid=document.createElement('div');grid.className='gridcells';items.forEach((name,i)=>{let id=prefix+':'+(i+1),b=document.createElement('button');b.className='cell'+(check(id)?' checked':'');b.textContent=name;b.title=name;b.setAttribute('aria-pressed',String(check(id)));b.onclick=()=>{setCheck(id,!check(id));b.classList.toggle('checked',check(id));b.setAttribute('aria-pressed',String(check(id)))};grid.append(b)});parent.append(grid)}
 function renderPrayerProgram(){let root=$('prayerProgram');if(!root)return;root.replaceChildren();let suras=['Haşr Suresi (son ayetler)','Vakıa ve Fetih sureleri','Vakıa ve Nebe sureleri','Vakıa ve Haşr sureleri','Mülk ve Vakıa sureleri'];['Sabah','Öğle','İkindi','Akşam','Yatsı'].forEach((p,i)=>{let panel=createPanel(root,p+' namazı sonrası',suras[i]);drawChecks(panel,['Sübhânallah 33','Elhamdülillah 33','Allahu Ekber 33','Önerilen sure'],`namaz-zikir:${today}:${p}`)})}
 function renderExtras(){let root=$('extrasContent');if(!root)return;root.replaceChildren();let index=createPanel(root,'PDF’nin 28 sayfalık içerik rehberi','Sayfa başlığına dokunarak ilgili bölüme git.');let list=document.createElement('div');list.className='pageindex';pdfPages.forEach((title,i)=>{let b=document.createElement('button');b.textContent=(i+1)+'. '+title;b.onclick=()=>{const dest=pageDest[i];show(dest);const anchors={0:'esmaPanel',1:'duaPanel',4:'prophetPanel',19:'kevserPanel',26:'nafilePanel',27:'kaza46Panel'};const target=anchors[i];if(target)requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({behavior:'smooth',block:'start'}))};list.append(b)});index.append(list);
-let esma=createPanel(root,'99 Esmâü’l-Hüsnâ · PDF s.1','Öğrendiğin veya üzerinde tefekkür ettiğin isimleri işaretle.');esma.id='esmaPanel';drawChecks(esma,esmaNames,'esma');
+let esma=createPanel(root,'99 Esmâü’l-Hüsnâ · PDF s.1','Öğrendiğin veya üzerinde tefekkür ettiğin isimleri işaretle.');esma.id='esmaPanel';drawChecks(esma,esmaNames,'esma');addLiveProgress(esma,'esma',esmaNames.length);
 let dua=createPanel(root,'Tövbe duası ve niyet · PDF s.2, 12','Allah’ım! Sen affedicisin, affetmeyi seversin, beni de affet.');dua.id='duaPanel';let arab=document.createElement('p');arab.className='arabic';arab.textContent='اللَّهُمَّ إِنَّكَ عَفُوٌّ كَرِيمٌ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';dua.append(arab);let note=document.createElement('textarea');note.placeholder='Bugünkü duam veya niyetim…';note.value=state.notes['niyet:'+today]||'';let saveButton=document.createElement('button');saveButton.className='primary';saveButton.textContent='Niyetimi kaydet';saveButton.onclick=()=>{state.notes['niyet:'+today]=note.value;save();saveButton.textContent='Kaydedildi ✓'};dua.append(note,saveButton);
-let prophet=createPanel(root,'Peygamberler haritası · PDF s.5','Okuduğun veya hakkında öğrendiğin peygamberleri işaretle.');prophet.id='prophetPanel';drawChecks(prophet,prophets,'peygamber');
+let prophet=createPanel(root,'Peygamberler haritası · PDF s.5','Okuduğun veya hakkında öğrendiğin peygamberleri işaretle.');prophet.id='prophetPanel';drawChecks(prophet,prophets,'peygamber');addLiveProgress(prophet,'peygamber',prophets.length);
 let zik=createPanel(root,'Tesirli zikirler · PDF s.22','PDF’deki öneriler; belirli sonuçlar garanti edilmez.');[['Zihin açıklığı','Yâ Fettâh'],['Zihni açmak','Yâ Nûr'],['Stresi azaltmak','Yâ Rahmân'],['Kalbi ferahlatmak','Yâ Latîf'],['Mutlu olmak','Yâ Vedûd'],['Halsizlik','Yâ Kavî'],['Kırgınlık','Yâ Cebbâr'],['Hidayet','Yâ Hâdî'],['Sıkıntı','Yâ Fettâh'],['Rızık','Yâ Rezzâk']].forEach(([label,name])=>{let p=document.createElement('p');p.className='zikir-tip';p.textContent=label+' — '+name;zik.append(p)});
 let extra=createPanel(root,'21 günlük Kevser programı · PDF s.20','Her gün 100 okuma hedefi. +1 sayacıyla takip et; 100 olunca gün tamamlanır.');extra.id='kevserPanel';for(let i=1;i<=21;i++){let id=`kevser:gun:${i}`,n=Number(state.counts[id]||0),row=document.createElement('div');row.className='tracker';let info=document.createElement('div');info.className='info';let title=document.createElement('strong');title.textContent=`${i}. gün`;let sub=document.createElement('small');sub.textContent=n>=100?'Tamamlandı ✓':`${100-n} okuma kaldı`;info.append(title,sub);let count=document.createElement('span');count.className='count';count.textContent=`${n} / 100`;let minus=document.createElement('button');minus.textContent='−';minus.onclick=()=>{state.counts[id]=Math.max(0,n-1);save();renderMore()};let plus=document.createElement('button');plus.textContent='+1';plus.disabled=n>=100;plus.onclick=()=>{state.counts[id]=Math.min(100,n+1);if(state.counts[id]===100)setCheck(`plan:kevser21:${i}`,true);save();renderMore()};row.append(info,count,minus,plus);extra.append(row)}
 
 let kaza=createPanel(root,'46 günlük kaza namazı çizelgesi · PDF s.28','Gün satırına dokunarak namaz kutularını aç.');kaza.id='kaza46Panel';for(let i=1;i<=46;i++){let details=document.createElement('details');details.className='daydetails';let summary=document.createElement('summary');summary.textContent=i+'. gün';details.append(summary);drawChecks(details,['Sabah','Öğle','İkindi','Akşam','Yatsı','Vitir'],`kaza46:${i}`);kaza.append(details)}
+addLiveProgress(kaza,'kaza46',46*6,true);
 }
+
+// V3: Görünür ilerleme göstergeleri ve 28 sayfalık ajanda kısayolları.
+function addLiveProgress(panel,prefix,total,matrix=false){
+ const status=document.createElement('p');status.className='hint live-progress';
+ function update(){let done=0;if(matrix){for(let i=1;i<=46;i++)for(let j=1;j<=6;j++)if(check(`${prefix}:${i}:${j}`))done++}
+ else for(let i=1;i<=total;i++)if(check(`${prefix}:${i}`))done++;
+ status.textContent=`Tamamlanan: ${done} / ${total} · %${Math.round(done/total*100)}`;
+ }
+ panel.insertBefore(status,panel.querySelector('.gridcells')||panel.querySelector('details')||null);
+ panel.addEventListener('click',e=>{if(e.target.closest('button.cell'))queueMicrotask(update)});update();
+}
+const priorShow=show;
+// Plan kutularına hızlı geçiş için bağlantılar, eski ekran akışını bozmadan.
+function addPlanShortcuts(){
+ const root=$('plans');if(!root||$('planQuickLinks'))return;
+ const wrap=document.createElement('div');wrap.className='panel';wrap.id='planQuickLinks';
+ const h=document.createElement('h3');h.textContent='Çizelgeye hızlı git';wrap.append(h);
+ const links=document.createElement('div');links.className='pageindex';
+ plans.filter(x=>!['kamp41','teheccud30'].includes(x[0])).forEach(([id,title])=>{
+  const b=document.createElement('button');b.textContent=title;b.onclick=()=>{
+   const panels=[...$('planList').children];const i=plans.filter(x=>!['kamp41','teheccud30'].includes(x[0])).findIndex(x=>x[0]===id);
+   panels[i]?.scrollIntoView({behavior:'smooth',block:'start'});
+  };links.append(b)
+ });wrap.append(links);root.insertBefore(wrap,$('planList'));
+}
+addPlanShortcuts();

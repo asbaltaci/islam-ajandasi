@@ -1,3 +1,3 @@
-İslam Ajandası V2.1 – Peygamberler haritası ve ek çizelge düzeltmesi.
-Ajanda sekmesinde en üstte bölüm kısayolları; peygamberler haritası (25 isim), 99 Esma, 21 günlük Kevser sayaçları, 46 günlük kaza namazı ve nafile namazlar.
-Mevcut localStorage anahtarı islam-ajandasi-v1 korunmuştur. Önce JSON yedeği alın. GitHub deposuna 8 dosyanın tamamını yükleyin.
+İSLAM AJANDASI V3
+
+V2.1 üzerine: Esmâ ve Peygamberler için canlı tamamlanma oranları, 46 günlük kaza çizelgesinde 276 kutuluk ilerleme, Hatim bölümünde hızlı çizelge bağlantıları. 28 PDF sayfasının içerik başlıkları korunur. Mevcut localStorage anahtarı korunur. Önce JSON yedeği alın. Tarayıcı testi gereklidir.
