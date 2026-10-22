@@ -13,7 +13,7 @@ function check(id){return !!state.checks[id]}function setCheck(id,v){state.check
 function show(screen){document.querySelectorAll('.screen').forEach(e=>e.classList.toggle('hidden',e.id!==screen));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===screen));if(screen==='home')renderHome();if(screen==='dhikr')renderDhikr();if(screen==='plans')renderPlans();if(screen==='worship')renderWorship();if(screen==='more')renderMore();window.scrollTo(0,0)}
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>show(b.dataset.screen)));
 function progress(id,n){let c=0;for(let i=1;i<=n;i++)if(check(`plan:${id}:${i}`))c++;return c}
-function renderHome(){const date=new Date(today+'T12:00:00');$('today').textContent=date.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const cards=[['Günlük zikir','dhikr',`${baseDhikrs.filter(x=>(state.counts[`${today}:${x[0]}`]||0)>0).length} zikir`],['Kur’an hatmi','plans',`${progress('hatim',30)} / 30 cüz`],['41 günlük kamp','plans',`${progress('kamp41',41)} / 41 gün`],['Teheccüd','plans',`${progress('teheccud30',30)} / 30 gün`]];$('homeCards').innerHTML=cards.map(x=>`<div class="card"><h3>${x[0]}</h3><strong>${x[2]}</strong><br><button data-goto="${x[1]}">Aç →</button></div>`).join('');$('homeCards').querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>show(b.dataset.goto));$('dailyNote').value=state.notes[today]||''}
+function renderHome(){const date=new Date(today+'T12:00:00');$('today').textContent=date.toLocaleDateString('tr-TR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});const cards=[['Günlük zikir','dhikr',`${baseDhikrs.filter(x=>(state.counts[`${today}:${x[0]}`]||0)>0).length} zikir`],['Kur’an hatmi','plans',`${progress('hatim',30)} / 30 cüz`],['41 günlük kamp','plans',`${progress('kamp41',41)} / 41 gün`],['Teheccüd','plans',`${progress('teheccud30',30)} / 30 gün`]];$('homeCards').innerHTML=cards.map(x=>`<div class="card"><h3>${x[0]}</h3><strong>${x[2]}</strong><br><button data-goto="${x[1]}">Aç →</button></div>`).join('');$('homeCards').querySelectorAll('[data-goto]').forEach(b=>b.onclick=()=>show(b.dataset.goto));$('dailyNote').value=state.notes[today]||'';renderHomeIndex()}
 $('saveNote').onclick=()=>{state.notes[today]=$('dailyNote').value;save();$('noteMessage').textContent='Not kaydedildi.'};
 $('dhikrDate').value=today;$('dhikrDate').onchange=e=>{selectedDay=e.target.value||today;renderDhikr()};
 let editing=null;function allDhikrs(){return [...baseDhikrs,...state.custom].filter(x=>!state.checks[`hidden:${x[0]}`])}
@@ -25,10 +25,10 @@ function renderPlanInto(container,filter){container.replaceChildren();for(const 
 function renderPlans(){renderPlanInto($('planList'),x=>!['teheccud30','kamp41'].includes(x[0]));renderPrayerProgram()}
 const prayers=['Sabah','Öğle','İkindi','Akşam','Yatsı','Vitir'];
 function renderWorship(){let root=$('worshipContent');root.innerHTML='<div class="panel"><h3>Günlük namaz takibi</h3><label>Tarih<input type="date" id="prayerDate"></label><div id="prayerChecks"></div></div><div class="panel"><h3>Kaza namazları</h3><p class="hint">PDF s.28 · Her işaret bir kaza namazı kaydıdır.</p><div id="kaza"></div></div><div class="panel"><h3>Kaza oruçları</h3><p class="hint">PDF s.26 · Tamamlanan günleri işaretle.</p><label>Toplam hedef (gün)<input id="fastGoal" type="number" min="1" max="3650"></label><div id="fastGrid" class="gridcells"></div></div>';let date=$('prayerDate');date.value=today;function drawPrayers(){let box=$('prayerChecks');box.replaceChildren();prayers.forEach(p=>{let row=document.createElement('div');row.className='checkrow';let cb=document.createElement('input');cb.type='checkbox';let k=`prayer:${date.value}:${p}`;cb.checked=check(k);cb.onchange=()=>setCheck(k,cb.checked);let label=document.createElement('label');label.textContent=p+' namazı';row.append(cb,label);box.append(row)})}date.onchange=drawPrayers;drawPrayers();let kaza=$('kaza');prayers.forEach(p=>{let k=`kaza:${p}`,n=Number(state.counts[k]||0),row=document.createElement('div');row.className='tracker';row.innerHTML=`<div class="info"><strong>${p}</strong><small>Tamamlanan toplam</small></div><span class="count">${n}</span>`;let minus=document.createElement('button');minus.textContent='−';minus.onclick=()=>{state.counts[k]=Math.max(0,n-1);save();renderWorship()};let plus=document.createElement('button');plus.textContent='+1';plus.onclick=()=>{state.counts[k]=n+1;save();renderWorship()};row.append(minus,plus);kaza.append(row)});let fg=$('fastGoal');fg.value=state.goals.fast||30;fg.onchange=()=>{state.goals.fast=Math.max(1,Math.min(3650,Number(fg.value)||30));save();renderWorship()};let grid=$('fastGrid');for(let i=1;i<=Number(fg.value);i++){let b=document.createElement('button');b.className='cell'+(check('fast:'+i)?' checked':'');b.textContent=i;b.onclick=()=>{setCheck('fast:'+i,!check('fast:'+i));b.classList.toggle('checked',check('fast:'+i))};grid.append(b)}}
-function renderMore(){const root=$('moreContent');root.replaceChildren();const intro=createPanel(root,'Ajanda çizelgeleri','Aşağıdaki bölüm düğmelerine dokun; her bölümde işaretlemeler otomatik kaydedilir.');const shortcuts=document.createElement('div');shortcuts.className='pageindex';[['Peygamberler haritası','prophetPanel'],['99 Esmâü’l-Hüsnâ','esmaPanel'],['21 Gün Kevser','kevserPanel'],['46 Gün Kaza Namazı','kaza46Panel'],['Nafile namazlar','nafilePanel']].forEach(([name,id])=>{let b=document.createElement('button');b.textContent=name;b.onclick=()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});shortcuts.append(b)});intro.append(shortcuts);renderExtras();const nafile=createPanel(root,'30 günlük nafile namazlar · PDF s.27','Her namaz için 30 günlük ayrı takip.');nafile.id='nafilePanel';['2 Rekât Teheccüd','2 Rekât Hacet','4 Rekât Kuşluk','2 Rekât Şükür','2 Rekât İstihare','2 Rekât Tevbe'].forEach(name=>{let panel=document.createElement('div');panel.className='compact';let h=document.createElement('h3');h.textContent=name;panel.append(h);drawChecks(panel,Array.from({length:30},(_,i)=>String(i+1)),`nafile:${name}`);nafile.append(panel)})}
+function renderMore(){const root=$('moreContent');root.replaceChildren();const intro=createPanel(root,'Ajanda çizelgeleri','Aşağıdaki bölüm düğmelerine dokun; her bölümde işaretlemeler otomatik kaydedilir.');const shortcuts=document.createElement('div');shortcuts.className='pageindex';[['Peygamberler haritası','prophetPanel'],['99 Esmâü’l-Hüsnâ','esmaPanel'],['21 Gün Kevser','kevserPanel'],['46 Gün Kaza Namazı','kaza46Panel'],['Nafile namazlar','nafilePanel']].forEach(([name,id])=>{let b=document.createElement('button');b.textContent=name;b.onclick=()=>document.getElementById(id)?.scrollIntoView({behavior:'smooth',block:'start'});shortcuts.append(b)});intro.append(shortcuts);renderExtras();const nafile=createPanel(root,'30 günlük nafile namazlar · PDF s.27','Her namaz için 30 günlük ayrı takip.');nafile.id='nafilePanel';['2 Rekât Teheccüd','2 Rekât Hacet','4 Rekât Kuşluk','2 Rekât Şükür','2 Rekât İstihare','2 Rekât Tevbe'].forEach(name=>{let panel=document.createElement('div');panel.className='compact';let h=document.createElement('h3');h.textContent=name;panel.append(h);drawChecks(panel,Array.from({length:30},(_,i)=>String(i+1)),`nafile:${name}`);nafile.append(panel)});addNafileProgress(nafile)}
 $('export').onclick=()=>{let blob=new Blob([JSON.stringify({app:'İslam Ajandası',version:1,data:state},null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='islam-ajandasi-yedek.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1500)};
-$('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let obj=JSON.parse(await file.text());if(obj.app!=='İslam Ajandası'||!obj.data||typeof obj.data!=='object')throw Error('Bu dosya İslam Ajandası yedeği değil');if(!confirm('Mevcut ajanda kayıtları yedekle değiştirilsin mi?'))return;state=obj.data;state.checks||={};state.counts||={};state.goals||={};state.notes||={};state.custom||=[];save();renderMore();$('dataMsg').textContent='Yedek yüklendi.'}catch(err){$('dataMsg').textContent='Hata: '+err.message}e.target.value=''};
-show('home');if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+$('import').onclick=()=>$('importFile').click();$('importFile').onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let obj=JSON.parse(await file.text());if(obj.app!=='İslam Ajandası'||!obj.data||typeof obj.data!=='object')throw Error('Bu dosya İslam Ajandası yedeği değil');if(!confirm('Mevcut ajanda kayıtları yedekle değiştirilsin mi?'))return;state=obj.data;state.checks||={};state.counts||={};state.goals||={};state.notes||={};state.custom||=[];save();renderMore();renderHome();$('dataMsg').textContent='Yedek yüklendi.'}catch(err){$('dataMsg').textContent='Hata: '+err.message}e.target.value=''};
+if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 
 // V2: PDF'nin önceki sürümde eksik kalan takip sayfaları.
@@ -41,7 +41,7 @@ function createPanel(parent,title,subtitle){let p=document.createElement('sectio
 function drawChecks(parent,items,prefix){let grid=document.createElement('div');grid.className='gridcells';items.forEach((name,i)=>{let id=prefix+':'+(i+1),b=document.createElement('button');b.className='cell'+(check(id)?' checked':'');b.textContent=name;b.title=name;b.setAttribute('aria-pressed',String(check(id)));b.onclick=()=>{setCheck(id,!check(id));b.classList.toggle('checked',check(id));b.setAttribute('aria-pressed',String(check(id)))};grid.append(b)});parent.append(grid)}
 function renderPrayerProgram(){let root=$('prayerProgram');if(!root)return;root.replaceChildren();let suras=['Haşr Suresi (son ayetler)','Vakıa ve Fetih sureleri','Vakıa ve Nebe sureleri','Vakıa ve Haşr sureleri','Mülk ve Vakıa sureleri'];['Sabah','Öğle','İkindi','Akşam','Yatsı'].forEach((p,i)=>{let panel=createPanel(root,p+' namazı sonrası',suras[i]);drawChecks(panel,['Sübhânallah 33','Elhamdülillah 33','Allahu Ekber 33','Önerilen sure'],`namaz-zikir:${today}:${p}`)})}
 function renderExtras(){let root=$('extrasContent');if(!root)return;root.replaceChildren();let index=createPanel(root,'PDF’nin 28 sayfalık içerik rehberi','Sayfa başlığına dokunarak ilgili bölüme git.');let list=document.createElement('div');list.className='pageindex';pdfPages.forEach((title,i)=>{let b=document.createElement('button');b.textContent=(i+1)+'. '+title;b.onclick=()=>{const dest=pageDest[i];show(dest);const anchors={0:'esmaPanel',1:'duaPanel',4:'prophetPanel',19:'kevserPanel',26:'nafilePanel',27:'kaza46Panel'};const target=anchors[i];if(target)requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({behavior:'smooth',block:'start'}))};list.append(b)});index.append(list);
-let esma=createPanel(root,'99 Esmâü’l-Hüsnâ · PDF s.1','Öğrendiğin veya üzerinde tefekkür ettiğin isimleri işaretle.');esma.id='esmaPanel';drawChecks(esma,esmaNames,'esma');addLiveProgress(esma,'esma',esmaNames.length);
+let esma=createPanel(root,'99 Esmâü’l-Hüsnâ · PDF s.1','Öğrendiğin veya üzerinde tefekkür ettiğin isimleri işaretle.');esma.id='esmaPanel';renderEsmaDetails(esma);addLiveProgress(esma,'esma',esmaNames.length);
 let dua=createPanel(root,'Tövbe duası ve niyet · PDF s.2, 12','Allah’ım! Sen affedicisin, affetmeyi seversin, beni de affet.');dua.id='duaPanel';let arab=document.createElement('p');arab.className='arabic';arab.textContent='اللَّهُمَّ إِنَّكَ عَفُوٌّ كَرِيمٌ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي';dua.append(arab);let note=document.createElement('textarea');note.placeholder='Bugünkü duam veya niyetim…';note.value=state.notes['niyet:'+today]||'';let saveButton=document.createElement('button');saveButton.className='primary';saveButton.textContent='Niyetimi kaydet';saveButton.onclick=()=>{state.notes['niyet:'+today]=note.value;save();saveButton.textContent='Kaydedildi ✓'};dua.append(note,saveButton);
 let prophet=createPanel(root,'Peygamberler haritası · PDF s.5','Okuduğun veya hakkında öğrendiğin peygamberleri işaretle.');prophet.id='prophetPanel';drawChecks(prophet,prophets,'peygamber');addLiveProgress(prophet,'peygamber',prophets.length);
 let zik=createPanel(root,'Tesirli zikirler · PDF s.22','PDF’deki öneriler; belirli sonuçlar garanti edilmez.');[['Zihin açıklığı','Yâ Fettâh'],['Zihni açmak','Yâ Nûr'],['Stresi azaltmak','Yâ Rahmân'],['Kalbi ferahlatmak','Yâ Latîf'],['Mutlu olmak','Yâ Vedûd'],['Halsizlik','Yâ Kavî'],['Kırgınlık','Yâ Cebbâr'],['Hidayet','Yâ Hâdî'],['Sıkıntı','Yâ Fettâh'],['Rızık','Yâ Rezzâk']].forEach(([label,name])=>{let p=document.createElement('p');p.className='zikir-tip';p.textContent=label+' — '+name;zik.append(p)});
@@ -76,3 +76,125 @@ function addPlanShortcuts(){
  });wrap.append(links);root.insertBefore(wrap,$('planList'));
 }
 addPlanShortcuts();
+
+
+// V3.2: Başlangıç rehberi, açıklamalı Esma ve çalışan nafile çizelgeleri.
+const esmaMeanings=`Tek ve gerçek ilah
+Sonsuz merhamet sahibi
+Çok merhametli
+Mülkün mutlak sahibi
+Her eksiklikten uzak
+Esenlik veren
+Güven veren
+Gözetip koruyan
+Üstün ve güçlü
+Dilediğini gerçekleştiren
+Büyüklükte eşsiz
+Yaratan
+Kusursuzca var eden
+Şekil veren
+Çok bağışlayan
+Her şeye üstün gelen
+Karşılıksız veren
+Rızık veren
+Hükmeden ve kapıları açan
+Her şeyi bilen
+Daraltan
+Genişleten
+Alçaltan
+Yükselten
+İzzet veren
+Alçaltan
+Her şeyi işiten
+Her şeyi gören
+Hükmeden
+Mutlak adalet sahibi
+Lütfu ince olan
+Her şeyden haberdar
+Yumuşak davranan
+Azamet sahibi
+Çok bağışlayan
+Az iyiliğe çok karşılık veren
+Çok yüce
+Çok büyük
+Koruyup gözeten
+Rızık ve güç veren
+Hesaba çeken
+Ululuk sahibi
+Cömert
+Her şeyi gözeten
+Dualara karşılık veren
+Rahmeti ve ilmi geniş
+Hikmet sahibi
+Çok seven
+Şanı yüce
+Dirilten, gönderen
+Her şeye şahit
+Hakkın kendisi
+Kendisine güvenilen
+Çok güçlü
+Sapasağlam
+Dost ve yardımcı
+Övülmeye layık
+Her şeyi sayıp bilen
+İlk defa yaratan
+Yeniden yaratan
+Hayat veren
+Ölümü yaratan
+Daima diri
+Her şeyi ayakta tutan
+Dilediğini bulan
+Şanı yüce
+Bir ve tek
+Hiçbir şeye muhtaç olmayan
+Her şeye gücü yeten
+Kudreti sınırsız
+Öne alan
+Geri bırakan
+Başlangıcı olmayan
+Sonu olmayan
+Varlığı açık olan
+Mahiyeti gizli olan
+Yöneten
+Pek yüce
+İyiliği bol
+Tövbeleri kabul eden
+Adaletle karşılık veren
+Affı çok olan
+Çok şefkatli
+Mülkün gerçek sahibi
+Azamet ve ikram sahibi
+Adaletle hükmeden
+Bir araya getiren
+Hiçbir şeye muhtaç olmayan
+Zenginlik veren
+Engelleyen
+Zararı yaratmaya da gücü yeten
+Faydayı yaratan
+Nurun kaynağı
+Hidayet veren
+Eşsiz yaratan
+Ebedî kalan
+Her şeyin varisi
+Doğruya yönelten
+Çok sabırlı`.split('\n');
+// Yaygın Arapça yazılışlar. Ebced değerleri yazılış farklarına göre değişebilir.
+const esmaArabic=`الله,الرحمن,الرحيم,الملك,القدوس,السلام,المؤمن,المهيمن,العزيز,الجبار,المتكبر,الخالق,البارئ,المصور,الغفار,القهار,الوهاب,الرزاق,الفتاح,العليم,القابض,الباسط,الخافض,الرافع,المعز,المذل,السميع,البصير,الحكم,العدل,اللطيف,الخبير,الحليم,العظيم,الغفور,الشكور,العلي,الكبير,الحفيظ,المقيت,الحسيب,الجليل,الكريم,الرقيب,المجيب,الواسع,الحكيم,الودود,المجيد,الباعث,الشهيد,الحق,الوكيل,القوي,المتين,الولي,الحميد,المحصي,المبدئ,المعيد,المحيي,المميت,الحي,القيوم,الواجد,الماجد,الواحد,الصمد,القادر,المقتدر,المقدم,المؤخر,الأول,الآخر,الظاهر,الباطن,الوالي,المتعالي,البر,التواب,المنتقم,العفو,الرؤوف,مالك الملك,ذو الجلال والإكرام,المقسط,الجامع,الغني,المغني,المانع,الضار,النافع,النور,الهادي,البديع,الباقي,الوارث,الرشيد,الصبور`.split(',');
+const abjadMap={ا:1,أ:1,إ:1,آ:1,ء:1,ؤ:6,ئ:10,ب:2,ج:3,د:4,ه:5,ة:5,و:6,ز:7,ح:8,ط:9,ي:10,ى:10,ك:20,ل:30,م:40,ن:50,س:60,ع:70,ف:80,ص:90,ق:100,ر:200,ش:300,ت:400,ث:500,خ:600,ذ:700,ض:800,ظ:900,غ:1000};
+function ebcedValue(arabic){let word=arabic.replace(/(^|\s)ال(?=[\u0621-\u064a])/g,'$1');return [...word].reduce((n,c)=>n+(abjadMap[c]||0),0)}
+function renderEsmaDetails(panel){
+ const help=document.createElement('p');help.className='hint';help.textContent='İsme dokun: kısa anlam ve ebced değerini gör. Yanındaki kutu ile öğrendiklerini işaretle. Ebced hesapları yaygın yazılışa göredir; farklı geleneklerde değişebilir.';panel.append(help);
+ const list=document.createElement('div');list.className='esma-list';
+ esmaNames.forEach((name,i)=>{const key='esma:'+(i+1),row=document.createElement('div');row.className='esma-row';
+ const cb=document.createElement('input');cb.type='checkbox';cb.checked=check(key);cb.setAttribute('aria-label',name+' tamamlandı');cb.onchange=()=>{setCheck(key,cb.checked);panel.dispatchEvent(new Event('esma-update'))};
+ const b=document.createElement('button');b.className='esma-name';b.type='button';b.textContent=(i+1)+'. '+name;b.setAttribute('aria-expanded','false');
+ const details=document.createElement('div');details.className='esma-detail hidden';let meaning=esmaMeanings[i]||'Kısa anlam hazırlanıyor';if(i===0)meaning='Tek ve gerçek ilah';
+ details.innerHTML='<strong>Anlamı:</strong> '+safe(meaning)+'<br><strong>Ebced:</strong> '+ebcedValue(esmaArabic[i]||'')+' <span class="hint">(başındaki “el/er” takısı hariç)</span>';
+ b.onclick=()=>{details.classList.toggle('hidden');b.setAttribute('aria-expanded',String(!details.classList.contains('hidden')))};
+ row.append(cb,b,details);list.append(row)});panel.append(list);
+ panel.addEventListener('esma-update',()=>{const status=panel.querySelector('.live-progress');if(status){let done=esmaNames.filter((_,i)=>check('esma:'+(i+1))).length;status.textContent=`Tamamlanan: ${done} / ${esmaNames.length} · %${Math.round(done/esmaNames.length*100)}`}});
+}
+function addNafileProgress(panel){let status=document.createElement('p');status.className='hint';panel.insertBefore(status,panel.firstChild.nextSibling);const names=['2 Rekât Teheccüd','2 Rekât Hacet','4 Rekât Kuşluk','2 Rekât Şükür','2 Rekât İstihare','2 Rekât Tevbe'];function update(){let n=0;for(let name of names)for(let i=1;i<=30;i++)if(check('nafile:'+name+':'+i))n++;status.textContent=`Tamamlanan: ${n} / 180 · %${Math.round(n/180*100)}`};panel.addEventListener('click',e=>{if(e.target.closest('button.cell'))queueMicrotask(update)});update()}
+function renderHomeIndex(){let root=$('homePdfIndex');if(!root)return;root.replaceChildren();const panel=createPanel(root,'PDF’nin 28 sayfalık içerik rehberi','Ajandayı açınca bütün sayfalara buradan ulaşabilirsin.');const list=document.createElement('div');list.className='pageindex';pdfPages.forEach((title,i)=>{let b=document.createElement('button');b.type='button';b.textContent=(i+1)+'. '+title;b.onclick=()=>{show(pageDest[i]);const anchors={0:'esmaPanel',1:'duaPanel',4:'prophetPanel',19:'kevserPanel',26:'nafilePanel',27:'kaza46Panel'};let target=anchors[i];if(target)requestAnimationFrame(()=>document.getElementById(target)?.scrollIntoView({behavior:'smooth',block:'start'}))};list.append(b)});panel.append(list)}
+
+show('home');
