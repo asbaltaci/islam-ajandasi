@@ -1,3 +1,5 @@
-İSLAM AJANDASI V3
+# İslam Ajandası V3.1
 
-V2.1 üzerine: Esmâ ve Peygamberler için canlı tamamlanma oranları, 46 günlük kaza çizelgesinde 276 kutuluk ilerleme, Hatim bölümünde hızlı çizelge bağlantıları. 28 PDF sayfasının içerik başlıkları korunur. Mevcut localStorage anahtarı korunur. Önce JSON yedeği alın. Tarayıcı testi gereklidir.
+V3 işlevleri korunmuştur. Üst başlıkta **Sürüm V3.1** görünür. Service worker önbellek sürümü yenilendi.
+
+GitHub deposunun kök dizinine ZIP içindeki dosyaların tümünü yükleyin. Yüklemeden önce uygulamanın JSON yedeğini alın.
