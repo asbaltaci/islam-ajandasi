@@ -1,5 +1,5 @@
-İslam Ajandası V3.8
+İslam Ajandası V3.9 — Android ayrı PWA kimliği
 
-Ajanda ekranındaki yinelenen Esmâü’l-Hüsnâ ve Peygamberlerin Hayatları bölümleri kaldırıldı. Esma Zikir sayfasında, peygamberler ayrı Peygamberler sayfasında korunmuştur. Ajandanın diğer takipleri ve kullanıcı verileri korunur.
+manifest.webmanifest içine bağımsız id ve start_url eklendi. Eski Kalp Yolculuğu uygulamasını kaldırmayın. Bu değişiklik yeni kurulumun ayrı algılanmasını amaçlar; Android/Chrome davranışı cihaz ve eski uygulamanın kimliğine göre değişebilir.
 
-GitHub deposunun ana dizinindeki dosyaları bu pakettekilerle değiştirin.
+GitHub deposunun ana dizinine tüm dosyaları yükleyin. Eski yerel veriler yeni uygulamaya otomatik taşınmayabilir; eski uygulamadan yedek alın.
