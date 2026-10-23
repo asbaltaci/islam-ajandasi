@@ -8,3 +8,6 @@
 
 /* V3.3: Peygamberler okuyucusu */
 .prophet-list{display:grid;gap:8px;margin-top:12px}.prophet-card{display:flex;align-items:center;gap:10px;border:1px solid #d6e2ea;border-radius:12px;padding:8px;background:#f8fbfd}.prophet-card input{width:20px;height:20px;margin:0;flex:none;accent-color:#21647b}.prophet-open{flex:1;text-align:left;min-height:44px;background:#eef6fa}.prophet-reading{min-height:340px}.prophet-reading h2{color:#174e69;margin:4px 0 18px}.prophet-reading p{font-size:18px;line-height:1.95;color:#284c5d;white-space:pre-line}.reader-controls{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:30px;padding-top:15px;border-top:1px solid #d6e2ea}.reader-controls button{flex:1}.reader-controls span{white-space:nowrap;font-weight:700;color:#356b80}@media(max-width:400px){.reader-controls button{font-size:11px;padding:10px 6px}}
+
+/* V3.4: Kaynak kartı ve uzun okuma */
+.prophet-reading .prophet-source{font-size:13px;line-height:1.65;white-space:normal;color:#275f6d;background:#eaf5f6;border-left:4px solid #b49b60;padding:12px 14px;border-radius:8px;margin-top:22px}.prophet-reading p{overflow-wrap:anywhere}.reader-controls{position:sticky;bottom:74px;background:#fff;padding:12px 4px;z-index:2;border-radius:12px;box-shadow:0 -5px 16px #183f5314}

@@ -7,3 +7,12 @@
 - Okundu işaretleri, Esma ve diğer kayıtlar aynı localStorage anahtarında kalır.
 - Sürüm V3.3 başlıkta görünür.
 - Kurulumdan önce JSON yedeği alın.
+
+
+## V3.4 – Peygamberler okuyucusu
+- 25 peygamber için içerikler `peygamberler.json` dosyasında.
+- 19. İlyas, 20. Elyesa, 21. Yunus, 22. Zekeriya, 23. Yahya, 24. İsa ve 25. Muhammed için genişletilmiş çok bölümlü içerik.
+- Diğer 18 peygamberin mevcut üç bölümlük özetleri korunmuştur; önceki sohbetlerdeki uzun metinler bu ZIP içinde bulunmadığı için birebir aktarılamamıştır.
+- Okuma sayfası cihazda otomatik kaydedilir; önceki/sonraki bölümler arasında gezilebilir.
+- Kur’an, hadis ve siyer bilgileri bölümlerde kaynak etiketiyle ayrılır.
+- Güncellenmiş çevrimdışı önbellek ve V3.4 sürüm etiketi.
