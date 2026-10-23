@@ -19,3 +19,7 @@
 
 
 V3.5: Peygamber hikayeleri app.js içine gömüldü; JSON fetch gerekmez. Ana sayfaya doğrudan Peygamberlerin Hayatları erişimi eklendi. GitHub deposuna ZIP dosyasını değil içindeki dosyaları yükleyin.
+
+
+## V3.6 uzun kıssalar
+İlk 18 peygamberin 3 cümlelik eski özetleri, Kur’an ayetlerine dayalı ayrı olay bölümleriyle değiştirildi. Son 7 peygamberin V3.5 bölümleri korundu. Bu bir eğitim anlatısıdır, her ayetin tam tefsiri değildir. `app.js` içerikleri içinde gömülüdür; `peygamberler.json` aynı verinin yedek kopyasıdır.

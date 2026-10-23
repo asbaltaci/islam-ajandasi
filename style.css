@@ -11,3 +11,5 @@
 
 /* V3.4: Kaynak kartı ve uzun okuma */
 .prophet-reading .prophet-source{font-size:13px;line-height:1.65;white-space:normal;color:#275f6d;background:#eaf5f6;border-left:4px solid #b49b60;padding:12px 14px;border-radius:8px;margin-top:22px}.prophet-reading p{overflow-wrap:anywhere}.reader-controls{position:sticky;bottom:74px;background:#fff;padding:12px 4px;z-index:2;border-radius:12px;box-shadow:0 -5px 16px #183f5314}
+
+.prophet-body{line-height:1.9;font-size:1.06rem;white-space:normal}.prophet-body p{margin:0 0 1.1rem}.prophet-reading{max-width:860px;margin-inline:auto}.prophet-source{line-height:1.7}
