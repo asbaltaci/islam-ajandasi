@@ -16,3 +16,6 @@
 - Okuma sayfası cihazda otomatik kaydedilir; önceki/sonraki bölümler arasında gezilebilir.
 - Kur’an, hadis ve siyer bilgileri bölümlerde kaynak etiketiyle ayrılır.
 - Güncellenmiş çevrimdışı önbellek ve V3.4 sürüm etiketi.
+
+
+V3.5: Peygamber hikayeleri app.js içine gömüldü; JSON fetch gerekmez. Ana sayfaya doğrudan Peygamberlerin Hayatları erişimi eklendi. GitHub deposuna ZIP dosyasını değil içindeki dosyaları yükleyin.
