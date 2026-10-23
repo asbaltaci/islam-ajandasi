@@ -1,25 +1,17 @@
-İSLAM AJANDASI V3.3
+# İslam Ajandası V3.7 — Menü ve bağlantı düzenlemesi
 
-- PDF 28 sayfalık içerik rehberi yalnızca Ana Sayfa bölümünde.
-- Ajanda > Peygamberler Haritası: 25 peygamberin ismine dokununca ayrı okuma ekranı.
-- Her peygamber için üç ayrı okuma sayfası, ileri/geri ve haritaya dönüş.
-- Her sayfada kısa Kur’an merkezli özetler; ayrıntılı tarihî biyografi iddiası yoktur.
-- Okundu işaretleri, Esma ve diğer kayıtlar aynı localStorage anahtarında kalır.
-- Sürüm V3.3 başlıkta görünür.
-- Kurulumdan önce JSON yedeği alın.
+- Ana sayfa yalnızca düzenli **İçindekiler** listesini gösterir.
+- PDF başlıkları kaldırıldı; menüde gerçek program adları kullanılır.
+- 29 içerik bağlantısı, ilgili ekran ve panel kimliğine bağlandı.
+- 99 Esmâü’l-Hüsnâ, Zikir ekranının altına taşındı.
+- Peygamberlerin Hayatları için ayrı alt menü ve 25 peygamberlik liste oluşturuldu.
+- Nafile namazlar, 46 günlük kaza namazları ve Kevser Ajanda altında; kaza oruçları İbadet altında.
+- Hatim ve okuma çizelgeleri ile mevcut kayıt anahtarı korunmuştur.
+- Çalışan 41 günlük kamp ve 30 günlük teheccüd çizelgeleri Ajanda altında da gösterilir (aynı kaydı kullanır).
+- Servis çalışanı önbelleği V3.7 olarak güncellendi.
 
+## Kurulum
+ZIP içindeki dokuz dosyayı GitHub deposunun ana dizinine yükleyin, değişiklikleri kaydedin ve uygulamayı yenileyin.
 
-## V3.4 – Peygamberler okuyucusu
-- 25 peygamber için içerikler `peygamberler.json` dosyasında.
-- 19. İlyas, 20. Elyesa, 21. Yunus, 22. Zekeriya, 23. Yahya, 24. İsa ve 25. Muhammed için genişletilmiş çok bölümlü içerik.
-- Diğer 18 peygamberin mevcut üç bölümlük özetleri korunmuştur; önceki sohbetlerdeki uzun metinler bu ZIP içinde bulunmadığı için birebir aktarılamamıştır.
-- Okuma sayfası cihazda otomatik kaydedilir; önceki/sonraki bölümler arasında gezilebilir.
-- Kur’an, hadis ve siyer bilgileri bölümlerde kaynak etiketiyle ayrılır.
-- Güncellenmiş çevrimdışı önbellek ve V3.4 sürüm etiketi.
-
-
-V3.5: Peygamber hikayeleri app.js içine gömüldü; JSON fetch gerekmez. Ana sayfaya doğrudan Peygamberlerin Hayatları erişimi eklendi. GitHub deposuna ZIP dosyasını değil içindeki dosyaları yükleyin.
-
-
-## V3.6 uzun kıssalar
-İlk 18 peygamberin 3 cümlelik eski özetleri, Kur’an ayetlerine dayalı ayrı olay bölümleriyle değiştirildi. Son 7 peygamberin V3.5 bölümleri korundu. Bu bir eğitim anlatısıdır, her ayetin tam tefsiri değildir. `app.js` içerikleri içinde gömülüdür; `peygamberler.json` aynı verinin yedek kopyasıdır.
+## Kontrol kapsamı
+JavaScript sözdizimi ve ZIP bütünlüğü doğrulandı. Bu ortamda Chromium ile yerel sayfa açılması yönetimsel olarak engellendiğinden tarayıcıda uçtan uca tıklama testi gerçekleştirilemedi.
